@@ -35,12 +35,16 @@ interface ResultsData {
 export default function ResultsPage() {
   const params = useParams();
   const router = useRouter();
-  const attemptId = params.attemptId as string;
+  const attemptId = params?.attemptId as string | undefined;
 
   const [data, setData] = useState<ResultsData | null>(null);
   const [streak, setStreak] = useState<number | null>(null);
 
   useEffect(() => {
+    if (!attemptId) {
+      router.push('/learn');
+      return;
+    }
     const fetchData = async () => {
       try {
         const [attemptRes, progressRes] = await Promise.all([
