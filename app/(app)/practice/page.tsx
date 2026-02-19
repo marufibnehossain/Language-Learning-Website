@@ -18,7 +18,7 @@ export default function PracticePage() {
   const [matchedPairs, setMatchedPairs] = useState<Array<string>>([]);
 
   useEffect(() => {
-    const mistakesParam = searchParams.get('mistakes');
+    const mistakesParam = searchParams?.get('mistakes');
     if (mistakesParam) {
       loadMistakes(mistakesParam);
     }
