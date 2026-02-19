@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design System Tokens from context.md */
+:root {
+  /* Base Colors */
+  --bg: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+
+  /* Primary (Green) */
+  --primary: #58cc02;
+  --primary-strong: #43c000;
+  --primary-soft: #89e219;
+
+  /* Accents */
+  --info: #1cb0f6;
+  --warning: #ffc800;
+  --danger: #ff4b4b;
+  --purple: #ce82ff;
+
+  /* Neutrals */
+  --panel: #f8fafc;
+  --shadow: rgba(0, 0, 0, 0.08);
+
+  /* Radius */
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-bg text-text;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Nunito', 'Baloo 2', 'Fredoka', sans-serif;
+    font-weight: 700;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Smooth transitions for interactive elements */
+@layer components {
+  .transition-smooth {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}

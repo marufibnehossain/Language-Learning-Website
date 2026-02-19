@@ -1,0 +1,144 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String?
+  passwordHash  String
+  emailVerified DateTime?
+  image         String?
+  isAdmin       Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  wallet        Wallet?
+  progress      UserProgress?
+  attempts      Attempt[]
+  transactions  CreditTransaction[]
+  emailTokens   EmailVerificationToken[]
+}
+
+model Wallet {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  balance        Int
+  cap            Int
+  lastRefillDate DateTime
+
+  user           User     @relation(fields: [userId], references: [id])
+}
+
+model CreditTransaction {
+  id          String   @id @default(cuid())
+  userId      String
+  amount      Int
+  type        String   // SPENT | EARNED | REFILL | BONUS
+  description String
+  timestamp   DateTime @default(now())
+  lessonId    String?
+
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model Course {
+  id          String  @id @default(cuid())
+  title       String
+  description String
+  language    String
+
+  units       Unit[]
+}
+
+model Unit {
+  id          String  @id @default(cuid())
+  title       String
+  description String
+  order       Int
+  courseId    String
+
+  course      Course  @relation(fields: [courseId], references: [id])
+  lessons     Lesson[]
+}
+
+model Lesson {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  order       Int
+  xpReward    Int
+  type        String    @default("lesson") // lesson | practice | story
+  unitId      String
+
+  unit        Unit      @relation(fields: [unitId], references: [id])
+  exercises   Exercise[]
+  attempts    Attempt[]
+}
+
+model Exercise {
+  id          String   @id @default(cuid())
+  type        String   // mcq | fill_blank | match_pairs
+  prompt      String
+  question    String
+  optionsJson String   // JSON string for options array
+  answer      String
+  explanation String?
+  lessonId    String
+
+  lesson      Lesson   @relation(fields: [lessonId], references: [id])
+  attemptLinks AttemptExercise[]
+}
+
+model Attempt {
+  id           String            @id @default(cuid())
+  userId       String
+  lessonId     String
+  startedAt    DateTime @default(now())
+  completedAt  DateTime?
+  xpEarned     Int
+  creditsSpent Int
+
+  user         User              @relation(fields: [userId], references: [id])
+  lesson       Lesson            @relation(fields: [lessonId], references: [id])
+  exercises    AttemptExercise[]
+}
+
+model AttemptExercise {
+  id         String  @id @default(cuid())
+  attemptId  String
+  exerciseId String
+  userAnswer String
+  isCorrect  Boolean
+
+  attempt    Attempt @relation(fields: [attemptId], references: [id])
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+}
+
+model UserProgress {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  xp               Int
+  streak           Int
+  lastActiveDate   DateTime
+  dailyXpGoal      Int
+  completedLessons String   // JSON string of lesson ID array
+
+  user             User     @relation(fields: [userId], references: [id])
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expires   DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+}
+
