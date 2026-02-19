@@ -13,7 +13,7 @@ import type { Lesson } from '@/lib/types';
 export default function LessonPage() {
   const params = useParams();
   const router = useRouter();
-  const lessonId = params.lessonId as string;
+  const lessonId = params?.lessonId as string | undefined;
 
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [loading, setLoading] = useState(true);
@@ -26,6 +26,10 @@ export default function LessonPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+    if (!lessonId) {
+      router.push('/learn');
+      return;
+    }
     const fetchLesson = async () => {
       const data = await getLessonById(lessonId);
       if (!data) {

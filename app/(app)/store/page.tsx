@@ -1,12 +1,24 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { getCurrentBalance } from '@/lib/credits';
 
 export default function StorePage() {
-  const currentBalance = getCurrentBalance();
+  const { data: session, status } = useSession();
+  const [balance, setBalance] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (status !== 'authenticated') return;
+    fetch('/api/wallet')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => data && setBalance(data.balance))
+      .catch(() => {});
+  }, [status]);
+
+  const currentBalance = balance ?? 0;
 
   const creditPackages = [
     { credits: 50, price: '$4.99', popular: false },
