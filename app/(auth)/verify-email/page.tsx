@@ -14,7 +14,7 @@ export default function VerifyEmailPage() {
   const [message, setMessage] = useState<string>('Verifying your email...');
 
   useEffect(() => {
-    const token = searchParams.get('token');
+    const token = searchParams?.get('token');
 
     if (!token) {
       setStatus('error');
