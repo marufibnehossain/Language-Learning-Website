@@ -70,7 +70,7 @@ export const authOptions: NextAuthOptions = {
             `;
             const raw = rows[0];
             const value = raw?.isAdmin ?? raw?.isadmin;
-            (session.user as { isAdmin?: boolean }).isAdmin = value === 1 || value === true;
+            (session.user as { isAdmin?: boolean }).isAdmin = value === 1;
           } catch {
             (session.user as { isAdmin?: boolean }).isAdmin = (token.isAdmin as boolean) ?? false;
           }

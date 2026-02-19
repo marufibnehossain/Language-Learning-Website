@@ -16,6 +16,14 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
+  const {
+    onAnimationStart,
+    onAnimationEnd,
+    onDrag,
+    onDragStart,
+    onDragEnd,
+    ...rest
+  } = props;
   const baseStyles = 'font-semibold rounded-lg transition-smooth focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
   
   const variantStyles = {
@@ -41,7 +49,7 @@ export function Button({
       whileHover={{ scale: variant === 'primary' ? 1.02 : 1 }}
       whileTap={{ scale: 0.98 }}
       className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${heightStyles[size]} ${className}`}
-      {...props}
+      {...rest}
     >
       {children}
     </motion.button>
